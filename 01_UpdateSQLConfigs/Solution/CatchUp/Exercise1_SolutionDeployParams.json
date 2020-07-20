@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "randomiser": {
+            "value":""
+        },
+        "sqlAdminLogin": {
+            "value": ""
+        },
+        "sqlAdminPassword":{
+            "value":""
+        },
+        "sqlServerName": {
+            "value": ""
+        },
+        "vmAdminLogin": {
+            "value": ""
+        },
+        "vmAdminPassword":{
+            "value":""
+        },
+        "vmName":{
+            "value": ""
+        },
+        "scriptURL": {
+            "value": "https://raw.githubusercontent.com/cairneym/DefenceInDepth/master/DeployBaseline/InstallSSMS/installSSMS.ps1"
+        },
+        "adGroupSID": {
+            "value": ""
+        }
+    }
+}

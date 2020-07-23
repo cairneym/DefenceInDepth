@@ -97,7 +97,7 @@
             "properties": {
                 "securityRules": [
                     {
-                        "name": "nsgRule1",
+                        "name": "AllowRDP",
                         "properties": {
                             "description": "description",
                             "protocol": "Tcp",
@@ -142,7 +142,8 @@
                 "addressPrefix": "10.0.0.0/24",
                 "networkSecurityGroup": {
                     "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('vmNSG'))]"
-                }
+                },
+                "privateEndpointNetworkPolicies": "Disabled"
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', 'NDC-VirtualNetwork')]"

@@ -10,15 +10,19 @@ if (!$context)
 Get-AzContext
 
 # Make sure the required modules are installed
-$azInstalled = $(Get-InstalledModule | Where-Object {$_.name -eq 'Az'}).name
+$azInstalled = $(Get-InstalledModule | Where-Object {($_.name -eq 'Az') -and ($_.Version -eq '4.4.0')}).name
 if (-not($azInstalled)) {
-    Install-Module Az
+    Write-Host -ForegroundColor green "Script requires the Az module at a minimum verion 4.4. Updating ..."
+    Install-Module Az -MinimumVersion 4.4 -Scope CurrentUser
+    Write-Host -ForegroundColor green " ... complete"
 }
 Import-Module Az
+
 
 # Prompt for the ServerName that we want to alter 
 $uniquifier = Read-Host -Prompt "Enter the 5 character uniquifier that was used for creating your resources "
 $sqlServer = "$(Read-Host -Prompt 'Enter the SQL Server name (without uniquifier extension)')-$uniquifier"
+$vmName = "$(Read-Host -Prompt 'Enter the Virtual Machine name (without uniquifier extension)')-$uniquifier"
 
 # Add an Azure AD Administrator to the SQL Server
 ## We need the following:
@@ -105,7 +109,7 @@ try {
         ## We now have to get a reference to the Virtual Network
         $vnet = Get-AzVirtualNetwork -ResourceGroupName NDC-Test -Name NDC-VirtualNetwork
         ## Now we update the Subnet through the Virtual Network
-        $vnet.Subnets.Where({$_.Name -eq "$($(Get-AzVirtualNetworkSubnetConfig -ResourceId $vnetFWRule).Name)"})[0].serviceEndpoints = $ServiceEndPoints
+        $vnet.Subnets.Where({$_.Name -eq "$($(Get-AzVirtualNetworkSubnetConfig -ResourceId $vnetFWRule).Name)"})[0].serviceEndpoints = $($ServiceEndPoints)
         ## Finally, update the Virtual Network
         $done = Set-AzVirtualNetwork -VirtualNetwork $vnet 
 
@@ -113,6 +117,21 @@ try {
     } else {
         Write-Host -ForegroundColor Magenta "Subnet '$(Get-AzVirtualNetworkSubnetConfig -ResourceId $vnetFWRule).Name' is already configured for 'Microsoft.Sql' to '$validLocation'"
     }
+} catch {
+    throw "$($_.Exception.InnerException.Message)"
+}
+
+
+# Add Resource Locks for the deployed resources
+## We need the following:
+##     Do Not Delete lock on the SQL Server
+##     Do Not Delete lock on the Virtual Machine
+try {
+    Write-Host -ForegroundColor Yellow "Adding a Resource Lock for Virtual Machine '$vmName'"
+    New-AzResourceLock -ResourceGroupName NDC-Test -LockName VMDeleteLock -LockLevel CanNotDelete -LockNotes 'Virtual Machine should not be deleted.' -ResourceName $vmName -ResourceType 'Microsoft.Compute/virtualMachines' -Force | Out-Null
+    Write-Host -ForegroundColor Yellow "Adding a Resource Lock for SQL Server '$sqlServer'"
+    New-AzResourceLock -ResourceGroupName NDC-Test -LockName SQLDeleteLock -LockLevel CanNotDelete -LockNotes 'SQL Server should not be deleted.' -ResourceName $sqlServer -ResourceType 'Microsoft.Sql/servers' -Force | Out-Null
+    Write-Host -ForegroundColor Yellow "Can Not Delete Resource Locks applied"
 } catch {
     throw "$($_.Exception.InnerException.Message)"
 }

@@ -80,7 +80,7 @@
             "properties": {
                 "securityRules": [
                     {
-                        "name": "nsgRule1",
+                        "name": "AllowRDP",
                         "properties": {
                             "description": "description",
                             "protocol": "Tcp",
@@ -140,7 +140,21 @@
                 "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
                 "minimalTlsVersion": "1.2",
                 "publicNetworkAccess": "Enabled"
-            }
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Sql/servers/providers/locks",
+                    "apiVersion": "2016-09-01",
+                    "name": "[concat(variables('uniqueSQLName'), '/Microsoft.Authorization/SQLDeleteLock')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', variables('uniqueSQLName'))]"
+                    ],
+                    "properties": {
+                        "level": "CanNotDelete",
+                        "notes": "SQL Server should not be deleted."
+                    }
+                }
+            ]
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
@@ -193,7 +207,21 @@
                         }
                     ]
                 }
-            }
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Compute/virtualMachines/providers/locks",
+                    "apiVersion": "2016-09-01",
+                    "name": "[concat(variables('uniqueVMName'), '/Microsoft.Authorization/VMDeleteLock')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', variables('uniqueVMName'))]"
+                    ],
+                    "properties": {
+                        "level": "CanNotDelete",
+                        "notes": "Virtual Machine should not be deleted."
+                    }
+                }
+            ]
         },
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
@@ -225,7 +253,7 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2020-05-01",
-            "name": "[concat(variables('vmNSG'), '/nsgRule1')]",
+            "name": "[concat(variables('vmNSG'), '/AllowRDP')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkSecurityGroups', variables('vmNSG'))]"
             ],
@@ -292,7 +320,9 @@
                                         "[resourceGroup().location]"
                                     ]
                                 }
-                            ]
+                            ],
+                            "PrivateEndpointNetworkPolicies": "Disabled",
+                            "PrivateLinkServiceNetworkPolicies": "Disabled"
                         }
                     }
                 ]
@@ -345,10 +375,12 @@
                     {
                         "service": "Microsoft.Sql",
                         "locations": [
-                            "australiaeast"
+                            "[resourceGroup().location]"
                         ]
                     }
-                ]
+                ],
+                "PrivateEndpointNetworkPolicies": "Disabled",
+                "PrivateLinkServiceNetworkPolicies": "Disabled"
             }
         },
         {
@@ -389,7 +421,11 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('vmPublicIPAddress'))]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'NDC-VirtualNetwork', 'Client-Subnet')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'NDC-VirtualNetwork', 'Client-Subnet')]",
+                                "properties": {
+                                    "PrivateEndpointNetworkPolicies": "Disabled",
+                                    "PrivateLinkServiceNetworkPolicies": "Disabled"
+                                }
                             }
                         }
                     }

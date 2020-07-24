@@ -12,7 +12,7 @@ We also only have the *Server Admin* available to login and manage the resource.
 
 ### Tasks
 
-Write a PowerShell script using the imperative commands that will do the following tasks:
+Update your current deployment programmatically (PowerShell, ARM Template, Azure CLI) to do the following tasks:
 
 **1.** Add an Azure Active Directory Administrator to the SQL Server. Set this to the *SQLAdmins* Group from your Azure Active Directory.  
 **2.** Add a Virtual Network firewall rule to your SQL Server. This should add the Client-Subnet from your Virtual Network and initially tell it to *Ignore the missing Endpoint*.  

@@ -26,7 +26,8 @@ Each subsequent exercise will include an ARM Template that deploy a sample solut
 *   The SQL Server ***"Server Name"*** needs to be globally unique, this is achived by the script appending the uniquifier to the name provided.  
 *   The VM also needs to be a globally unique name. The same suffix as for the SQL Server will be appended to assure this.  
 *   The SQL Server and VM should be named with lower case letters and numbers only.  
-*   The Resource Group name is currently hard-coded as ***"NDC-Test"***.  Feel free to update the scripts if you would like to use a different name.  
+*   The resources are divided into 3 Resource Groups - one for the Networking, one for the SQL Server related resources and one for the VM. This is because the SQL Server and Network resources will be changed over time and the VM will stay pretty much static. Since the VM deployment is one of the longest tasks, we'll do it this way so we don't always wait on this resource when applying new ARM Templates.  
+*   You will be prompted for the names of the Resource Groups. My suggestions are: *NDC-NET*, *NDC-DB* and *NDC-VM*.     
 *   The VM administrator password must be between 12 and 123 characters in length. The login must be between 1 and 20 characters.  
 *   You will be prompted for parameters for ***SQL Server Name***, ***SQL Admin Login***, ***SQL Admin Password***, ***VM Name***, ***VM Admin Login***, ***VM Admin Password***, ***5 character Uniquifier***.  
 

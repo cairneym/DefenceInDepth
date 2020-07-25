@@ -14,18 +14,6 @@
         "sqlServerName": {
             "value": ""
         },
-        "vmAdminLogin": {
-            "value": ""
-        },
-        "vmAdminPassword":{
-            "value":""
-        },
-        "vmName":{
-            "value": ""
-        },
-        "scriptURL": {
-            "value": "https://raw.githubusercontent.com/cairneym/DefenceInDepth/master/00_DeployBaseline/Solution/InstallSSMS/installSSMS.ps1"
-        },
         "clientIP":{
             "value":""
         }

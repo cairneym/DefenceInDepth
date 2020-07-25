@@ -1,0 +1,124 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":"1.0.0.0",
+    "parameters": {
+        "randomiser": {
+            "type": "string",
+            "metadata": {
+                "description": "A 5 character string to append to the SQL Server and VM DNS names to make them globally unique"
+            }
+        },
+        "sqlServerName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the SQL Server"
+            }
+        },
+        "sqlAdminLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "The SQL Server Administrator login account"
+            }
+        },
+        "sqlAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the SQL Server administrator login"
+            }
+        },
+        "clientIP": {
+            "type": "string",
+            "metadata": {
+                "description": "The IP Address of the computer running this script. This needs to be added to the SQL Server firewall"
+            }
+        }
+    },
+    "variables": {
+        "databaseName":"AdventureWorksLT",
+        "uniqueSQLName": "[concat(parameters('sqlServerName'), '-', parameters('randomiser'))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('uniqueSQLName')]",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2019-06-01-preview",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "event": "NDC Melbourne",
+                "deleteAfter": "2020-08-01",
+                "displayName": "[variables('uniqueSQLName')]"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "administratorLogin": "[parameters('sqlAdminLogin')]",
+                "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
+                "minimalTlsVersion": "1.2",
+                "publicNetworkAccess":"Enabled"
+            },
+            "resources":[
+                {
+                    "name": "AllowAllWindowsAzureIps",
+                    "type": "firewallRules",
+                    "apiVersion": "2015-05-01-preview",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', variables('uniqueSQLName'))]"
+                    ],
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                    "name": "ClientIP",
+                    "type": "firewallRules",
+                    "apiVersion": "2015-05-01-preview",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', variables('uniqueSQLName'))]"
+                    ],
+                    "location":"[resourceGroup().location]",
+                    "properties": {
+                        "startIpAddress": "[parameters('clientIP')]",
+                        "endIpAddress": "[parameters('clientIP')]"
+                    }
+                },
+                {
+                    "name": "[variables('databaseName')]",
+                    "type": "databases",
+                    "apiVersion": "2019-06-01-preview",
+                    "location": "[resourceGroup().location]",
+                    "tags": {
+                        "event": "NDC Melbourne",
+                        "deleteAfter": "2020-08-01",
+                        "displayName": "Sample Database"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', variables('uniqueSQLName'))]"
+                    ],
+                    "sku": {
+                        "name": "Basic",
+                        "tier": "Basic"
+                    },
+                    "properties": {
+                        "createMode": "Default",
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": 104857600,
+                        "sampleName": "AdventureWorksLT",
+                        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                        "zoneRedundant": false,
+                        "licenseType": "LicenseIncluded",
+                        "storageAccountType": "GRS"
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {
+        "sqlServerName": {
+            "type": "string",
+            "value": "[variables('uniqueSQLName')]"
+        }
+    }
+}

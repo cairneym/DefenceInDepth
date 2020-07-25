@@ -2,7 +2,7 @@
 Full day session on Securing your Azure SQL Database
 
 
-## Exercise 1 : Updating the SQL Server Configuration
+## Exercise 1 : Locking Down Access
 
 The SQL Server and Database deployed as a Baseline is immediately less secure than it could be. In this exercise, we will start to harden the deployment in line with the areas we have covered in the Speaker's Tutorial.
 
@@ -44,6 +44,7 @@ Finally, connect with the second user, ***user2@\<your domain name\>.onmicrosoft
 [Azure Resource Locks](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources)  
 [Azure AD Authentication](https://docs.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview)  
 [Issue with setting Service Endpoints with Workaround](https://github.com/Azure/azure-powershell/issues/8735)  
+[ARM Templates do not remove Server IP Firewall Rules](https://social.msdn.microsoft.com/Forums/sqlserver/en-US/9de3ed38-351f-418f-a2fa-c43ca102906f/server-level-firewall-rules-not-being-removed-when-arm-template-is-updated?forum=ssdsgetstarted)  
 
 #### Sample Solution
 
@@ -52,4 +53,4 @@ A sample PowerShell script to implement this is included in the **Solution** sub
 
 #### Catch Up
 
-If you need to get to this stage directly, there is an ARM Template and script file in the **Solution\CatchUp** subdirectory of this section. This Template is a full deployment, so you will need to delete your resources from this Resource Group in the Azure Portal before running it. It will provide the VM, Network and SQL Server to allow you to perform the validation steps and you can browse the resources and their configurations in the Portal.
+If you need to get to this stage directly, there is an ARM Template and script file in the **Solution\CatchUp** subdirectory of this section. This script will deploy to the current Resource Groups and will try to delete any respurces that don;t appear in the Template. Note however that some resources cannot be deleted even if they are no longer defined in the Template - these are know as *Proxy Resources*. SQL Server IP Firewall Rules are one such resources an so there is an extra PowerShell script command to remove these before applying the Template.

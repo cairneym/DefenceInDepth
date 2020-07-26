@@ -67,7 +67,7 @@ $rgs = Get-AzResourceGroup
 Write-Host -ForegroundColor Yellow $(Get-Date)
 Write-Host -ForegroundColor Yellow "******************************************************************************************"
 Write-Host -ForegroundColor Yellow "Deploying the Virtual Network to $netRG"
-if ($rgs -notcontains $netRG) {
+if ($rgs.ResourceGroupName -notcontains $netRG) {
     Write-Host -ForegroundColor Yellow "Creating new Resource Group '$netRG'"
     $check1 = New-AzResourceGroup -Name $netRG -Location 'AustraliaEast'
     Write-Host -ForegroundColor Yellow "... $($check1.ProvisioningState)"
@@ -78,7 +78,7 @@ if ($vnetDeploy.Outputs.virtualNetworkName.value){
     Write-Host -ForegroundColor Yellow "Virtual Network resources deployed"
     Write-Host -ForegroundColor Yellow "******************************************************************************************"
     Write-Host -ForegroundColor Yellow "Deploying the Virtual Machine to $vmRG"
-    if ($rgs -notcontains $vmRG) {
+    if ($rgs.ResourceGroupName -notcontains $vmRG) {
         Write-Host -ForegroundColor Yellow "Creating new Resource Group '$vmRG'"
         $check2 = New-AzResourceGroup -Name $vmRG -Location 'AustraliaEast'
         Write-Host -ForegroundColor Yellow "... $($check2.ProvisioningState)"
@@ -90,7 +90,7 @@ if ($vnetDeploy.Outputs.virtualNetworkName.value){
         Write-Host -ForegroundColor Yellow "Virtual Machine resources deployed"
         Write-Host -ForegroundColor Yellow "******************************************************************************************"
         Write-Host -ForegroundColor Yellow "Deploying SQL Server to $sqlRG "
-        if ($rgs -notcontains $sqlRG) {
+        if ($rgs.ResourceGroupName -notcontains $sqlRG) {
             Write-Host -ForegroundColor Yellow "Creating new Resource Group '$sqlRG'"
             $check3 = New-AzResourceGroup -Name $sqlRG -Location 'AustraliaEast'
             Write-Host -ForegroundColor Yellow "... $($check3.ProvisioningState)"

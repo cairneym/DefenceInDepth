@@ -1,0 +1,212 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":"1.0.0.0",
+    "parameters": {
+        "randomiser": {
+            "type": "string",
+            "metadata": {
+                "description": "A 5 character string to append to the SQL Server and VM DNS names to make them globally unique"
+            }
+        },
+        "vmName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Virtual Machine"
+            }
+        },
+        "vmAdminLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "The VM Administrator login account"
+            }
+        },
+        "vmAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the VM administrator login"
+            }
+        },
+        "scriptURL": {
+            "type": "string",
+            "metadata": {
+                "description": "The URL to where the custom install script can be found"
+            }
+        },
+        "vnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Resource Group where the Virtual Network is deployed"
+            }
+        }
+    },
+    "variables": {
+        "vnetName": "NDC-VirtualNetwork",
+        "vnetResourceId": "[resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "vnetNSGResourceID": "[resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/networkSecurityGroups', concat(variables('vnetName'), '-nsg'))]",
+        "vmPublicIPAddress": "[concat(variables('uniqueVMName'),'-PublicIP')]",
+        "vmNIC": "[concat(variables('uniqueVMName'), '-nic')]",
+        "uniqueVMName":"[concat(parameters('vmName'), '-', parameters('randomiser'))]",
+        "scriptFileName": "[substring(parameters('scriptURL'), add(lastIndexOf(parameters('scriptURL'), '/'),1))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('vmPublicIPAddress')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-05-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "event": "NDC Melbourne",
+                "deleteAfter": "2020-08-01",
+                "displayName": "PublicIPAddress"
+            },
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower(variables('uniqueVMName'))]"
+                }
+            }
+        },
+        {
+            "name": "[variables('vmNIC')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-05-01",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('vmPublicIPAddress'))]"
+            ],
+            "tags": {
+                "event": "NDC Melbourne",
+                "deleteAfter": "2020-08-01",
+                "displayName": "windowsVM Network Interface"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('vmPublicIPAddress'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(variables('vnetResourceId'), '/subnets/Client-Subnet')]",
+                                "properties": {
+                                    "PrivateEndpointNetworkPolicies": "Disabled",
+                                    "PrivateLinkServiceNetworkPolicies": "Disabled"
+                                }
+                            }
+                        }
+                    }
+                ],
+                
+                "networkSecurityGroup": {
+                    "id": "[variables('vnetNSGResourceId')]"
+                }
+            }
+        },
+        {
+            "name": "[variables('uniqueVMName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNIC'))]"
+            ],
+            "tags": {
+                "event": "NDC Melbourne",
+                "deleteAfter": "2020-08-01",
+                "displayName": "ndc-ssms-mhc68"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B2s"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS"
+                        }
+                    }
+                },
+                "osProfile": {
+                    "computerName": "[variables('uniqueVMName')]",
+                    "adminUsername": "[parameters('vmAdminLogin')]",
+                    "adminPassword": "[parameters('vmAdminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVMAgent": true
+                        
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNIC'))]"
+                        }
+                    ]
+                }
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "resources": [
+                {
+                    "name": "[concat(variables('uniqueVMName'), '/Microsoft.Authorization/VMDeleteLock')]",
+                    "type": "Microsoft.Compute/virtualMachines/providers/locks",
+                    "apiVersion": "2016-09-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', variables('uniqueVMName'))]"
+                    ],
+                    "properties": {
+                        "level": "CanNotDelete",
+                        "notes": "Virtual Machine should not be deleted."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "[concat(variables('uniqueVMName'), '/installSSMS')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "event": "NDC Melbourne",
+                "deleteAfter": "2020-08-01",
+                "displayName": "InstallSSMS on Windows VM"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', variables('uniqueVMName'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.10",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[parameters('scriptURL')]"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFileName'))]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "virtualMachineName": {
+            "type": "string",
+            "value": "[variables('uniqueVMName')]"
+        }
+    }
+}

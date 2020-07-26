@@ -14,20 +14,11 @@
         "sqlServerName": {
             "value": ""
         },
-        "vmAdminLogin": {
+        "adGroupSID": {
             "value": ""
         },
-        "vmAdminPassword":{
-            "value":""
-        },
-        "vmName":{
+        "vnetResourceGroup": {
             "value": ""
-        },
-        "scriptURL": {
-            "value": "https://raw.githubusercontent.com/cairneym/DefenceInDepth/master/DeployBaseline/InstallSSMS/installSSMS.ps1"
-        },
-        "clientIP":{
-            "value":""
         }
     }
 }

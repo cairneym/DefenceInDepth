@@ -26,7 +26,17 @@ Afterwards, take the templates away with you and practice / adapt to your own bu
 Navigate to the **00_DeployBaseline** folder and folow the instructions in the file *Exercise0_Guidance.md*.
 
 
-### Exercise 01 - Update the SQL Server specific configurations
+### Exercise 01 - Lock Down Access
 
-Navigate to the **01_UpdateSQLConfigs** folder and folow the instructions in the file *Exercise1_Guidance.md*.
+Navigate to the **01_LockDownAccess** folder and folow the instructions in the file *Exercise1_Guidance.md*.
+
+
+### Exercise 02 - Implement Audits and Vulnerability Scans
+
+Navigate to the **02_AuditsAndVulnerabilityScans** folder and folow the instructions in the file *Exercise2_Guidance.md*.
+
+
+### Exercise 03 - Azure Policies
+
+Navigate to the **03_DeployPolicies** folder and folow the instructions in the file *Exercise2_Guidance.md*.
 

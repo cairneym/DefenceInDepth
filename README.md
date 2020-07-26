@@ -1,5 +1,5 @@
-# DefenceInDepth
-Full day session on Securing your Azure SQL Database
+# Defence In Depth: Part1
+First Part of a Full day session on Securing your Azure SQL Database
 
 ## Pre-requisites
 

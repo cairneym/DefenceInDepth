@@ -35,7 +35,7 @@ Verification for this exercise is included in the Task Steps.
 
 [Azure Policies](https://docs.microsoft.com/en-us/azure/governance/policy/overview)  
 [Structure of an Azure Policy](https://docs.microsoft.com/en-us/azure/governance/policy/concepts/definition-structure)  
-[Azure Pllicy Initiatives](https://docs.microsoft.com/en-us/azure/governance/policy/concepts/initiative-definition-structure)  
+[Azure Policy Initiatives](https://docs.microsoft.com/en-us/azure/governance/policy/concepts/initiative-definition-structure)  
 [Understanding Policy Effects](https://docs.microsoft.com/en-us/azure/governance/policy/concepts/effects)  
 [ARM Resource types and schema versions](https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/allversions)  
 [Azure Role Based Access - Role Definitions](https://docs.microsoft.com/en-us/azure/role-based-access-control/role-definitions)  

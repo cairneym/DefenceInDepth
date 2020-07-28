@@ -7,7 +7,7 @@
             },
             {
                 "field": "Microsoft.Sql/servers/minimalTlsVersion",
-                "notEquals": "[parameters('minTLSVersion')]"
+                "less": "[parameters('minTLSVersion')]"
             }
         ]
     },

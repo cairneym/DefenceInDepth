@@ -1,10 +1,10 @@
-# DefenceInDepth
+# Defence In Depth: Part1
 Full day session on Securing your Azure SQL Database
 
 
 ## Exercise 0 : Deploy a Baseline Azure SQL Database Environment
 
-Before we can get started with hardening the Azure SQL Databasde environment, we need a baseline deployment to start from. Surprisingly, this is sometimes all that I see in place and while this *may* be OK for a demo environment that will be dropped after the event, it is nowhere near sufficient for your production databases.
+Before we can get started with hardening the Azure SQL Database environment, we need a baseline deployment to start from. Surprisingly, this is sometimes all that I see in place and while this *may* be OK for a demo environment that will be dropped after the event, it is nowhere near sufficient for your production databases.
 
 We will be making use of ARM Templates as well as PowerShell scripts throughout the exercises. The starting point combines some PowerShell scripting to configure the Azure Active Directory Users and Groups and then will deploy Azure resources using an ARM Template.
 
@@ -23,7 +23,7 @@ Each subsequent exercise will include an ARM Template that deploy a sample solut
 *   The script will prompt you for a *uniquifier*. Since the SQL Server name and the VM DNS Name must be globally unique, this is used to attempt to ensure these are made unique.
 
 **5.** From a PowerShell prompt, run ``.\deployBaseline.ps1`` script, noting the following:  
-*   The SQL Server ***"Server Name"*** needs to be globally unique, this is achived by the script appending the uniquifier to the name provided.  
+*   The SQL Server ***"Server Name"*** needs to be globally unique, this is achieved by the script appending the uniquifier to the name provided.  
 *   The VM also needs to be a globally unique name. The same suffix as for the SQL Server will be appended to assure this.  
 *   The SQL Server and VM should be named with lower case letters and numbers only.  
 *   The resources are divided into 3 Resource Groups - one for the Networking, one for the SQL Server related resources and one for the VM. This is because the SQL Server and Network resources will be changed over time and the VM will stay pretty much static. Since the VM deployment is one of the longest tasks, we'll do it this way so we don't always wait on this resource when applying new ARM Templates.  

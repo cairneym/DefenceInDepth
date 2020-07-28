@@ -1,0 +1,25 @@
+Output/*
+pester-*.xml
+ServerLogins.json
+.vs/
+packages/
+
+# User-specific files
+*.suo
+*.user
+*.pfx
+
+# Build results
+[Pp]ublish/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/

@@ -1,4 +1,4 @@
-# DefenceInDepth
+# Defence In Depth: Part1
 Full day session on Securing your Azure SQL Database
 
 
@@ -8,7 +8,7 @@ We now have a pretty robust Template that we can make use of for our Azure SQL D
 
 ***Azure Policies*** allow us to further control *what* can be deployed into our subscriptions with the option to either **deny** or **correct** any non-compliant ones. We can also get an ongoing Health Check of all of our SQL Servers to ensure that they are staying compliant with our well crafted Template design.
 
-The other major benefit of Azure Policies is that it can assess compliance at large scale since it considers the *infrastructure as code* design of our environment and looks for patterns in the JSON defintions at the selected scope. Just think how m,uch easier it is to query several thousand JSON documents to confirm a specific patterns in a property compared to having to run a T-SQL query against all those instances and databases. I have seen company's with several hundred thousands of databases where a basic query against each one could take a full day to complete!
+The other major benefit of Azure Policies is that it can assess compliance at large scale since it considers the *infrastructure as code* design of our environment and looks for patterns in the JSON defintions at the selected scope. Just think how m,uch easier it is to query several thousand JSON documents to confirm a specific patterns in a property compared to having to run a T-SQL query against all those instances and databases. I have seen companies with several hundred thousands of databases where a basic query against each one could take a full day to complete!
 
 In addition to the *Azure Policies* that check for out-of-compliance instances, *RBAC Roles* can ensure that only approved actors are able to perform certain actions in the subscription. We have already seen an example of applying a RBAC Role, where we limited the access to the Storage Accounts to only the SQL Server identity. As well as access controls though, *RBAC Roles* can also allow or deny activities such as who is permitted to deploy a new Azure SQL Database.
 
@@ -23,7 +23,7 @@ Implement mangement and control policies using PowerShell, ARM Template, Azure C
 **4.** Create each *individual* Policy and assign them to your Resource Group.     
 **5.** Test your deployment template with varying values related to the *Policy Defintions* and verify that any ***Deny*** Policy Effects are immediately enacted and those deployments fail. For ***Audit*** based Policy Definitions, you may have to wait a while before these show up in the Portal.  
 **6.** Select at least 2 of your Policy Definitions and combine them into a single ***Policy Initiative***. You will need to remove the individualPolicy Assignments for these. Repeat the deployment tests to demonstrate that the deployment honours each of the individual Policy Definitions in the Intiative.   
-**7.** Add one of your Azure AD users to the ***SQL DB Contributor*** Built-In Role and the other to the ***SQL Security Manager*** Built-In Role. From the Virtual Machine, loging to the Azure Portal with each user (private browser sessions help here). Navigate to the *Subscription/Access Control (IAM)* blade. From *Role Assignments* click on *Add* and add the required role memberships.  
+**7.** Add one of your Azure AD users to the ***SQL DB Contributor*** Built-In Role and the other to the ***SQL Security Manager*** Built-In Role. From the Virtual Machine, login to the Azure Portal with each user (private browser sessions help here). Navigate to the *Subscription/Access Control (IAM)* blade. From *Role Assignments* click on *Add* and add the required role memberships.  
 **8.** For each user, navigate to the *SQL Server/Advanced Data Security* blade and note the difference in access. Navigate to the *SQL Server/Manage Backups* blade and notice the different availability there.
 
 

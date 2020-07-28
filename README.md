@@ -12,7 +12,7 @@ Your computer will also need to have Azure Powershell's *Az* module and also the
 
 ## Part 1 : Securing the Platform
 
-The first part of this workshop focusses on the Azure Platform, and the services and resources that exist there to help secure your Azure SQL Databases. Our plan for the workshop is to start from a very vanilla implementation of Azure SQL Database and then progressively harden it through each of the exercises.
+The first part of this workshop focuses on the Azure Platform, and the services and resources that exist there to help secure your Azure SQL Databases. Our plan for the workshop is to start from a very vanilla implementation of Azure SQL Database and then progressively harden it through each of the exercises.
 
 You will learn what components can make a difference and will develop ARM templates to use to deploy these additional components properly configured.
 
@@ -23,20 +23,20 @@ Afterwards, take the templates away with you and practice / adapt to your own bu
 
 ### Exercise 00 - Deploy a baseline environment
 
-Navigate to the **00_DeployBaseline** folder and folow the instructions in the file *Exercise0_Guidance.md*.
+Navigate to the **00_DeployBaseline** folder and follow the instructions in the file *Exercise0_Guidance.md*.
 
 
 ### Exercise 01 - Lock Down Access
 
-Navigate to the **01_LockDownAccess** folder and folow the instructions in the file *Exercise1_Guidance.md*.
+Navigate to the **01_LockDownAccess** folder and follow the instructions in the file *Exercise1_Guidance.md*.
 
 
 ### Exercise 02 - Implement Audits and Vulnerability Scans
 
-Navigate to the **02_AuditsAndVulnerabilityScans** folder and folow the instructions in the file *Exercise2_Guidance.md*.
+Navigate to the **02_AuditsAndVulnerabilityScans** folder and follow the instructions in the file *Exercise2_Guidance.md*.
 
 
 ### Exercise 03 - Azure Policies
 
-Navigate to the **03_DeployPolicies** folder and folow the instructions in the file *Exercise2_Guidance.md*.
+Navigate to the **03_DeployPolicies** folder and follow the instructions in the file *Exercise2_Guidance.md*.
 

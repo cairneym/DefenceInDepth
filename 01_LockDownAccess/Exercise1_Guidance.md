@@ -1,4 +1,4 @@
-# DefenceInDepth
+# Defence In Depth: Part1
 Full day session on Securing your Azure SQL Database
 
 
@@ -8,7 +8,7 @@ The SQL Server and Database deployed as a Baseline is immediately less secure th
 
 This deployment has opened up Public Firewall access to your workstation and also has enabled access from ALL Azure services. We want to remove explicitly enabled Firewall Rules, but still enable the VM that we deployed in the Baseline to have access to the SQL Server.
 
-We also only have the *Server Admin* available to login and manage the resource. We want to aloow our *SQLAdmins* Azure Active Directory group to be administrators as well. At this stage, only admins will be permitted to connect, therefore our *NDC User1* Azure Active Directory user should not be able to connect.
+We also only have the *Server Admin* available to login and manage the resource. We want to allow our *SQLAdmins* Azure Active Directory group to be administrators as well. At this stage, only admins will be permitted to connect, therefore our *NDC User1* Azure Active Directory user should not be able to connect.
 
 ### Tasks
 
@@ -53,4 +53,4 @@ A sample PowerShell script to implement this is included in the **Solution** sub
 
 #### Catch Up
 
-If you need to get to this stage directly, there is an ARM Template and script file in the **Solution\CatchUp** subdirectory of this section. This script will deploy to the current Resource Groups and will try to delete any respurces that don;t appear in the Template. Note however that some resources cannot be deleted even if they are no longer defined in the Template - these are know as *Proxy Resources*. SQL Server IP Firewall Rules are one such resources an so there is an extra PowerShell script command to remove these before applying the Template.
+If you need to get to this stage directly, there is an ARM Template and script file in the **Solution\CatchUp** subdirectory of this section. This script will deploy to the current Resource Groups and will try to delete any resources that don't appear in the Template. Note however that some resources cannot be deleted even if they are no longer defined in the Template - these are know as *Proxy Resources*. SQL Server IP Firewall Rules are one such resources an so there is an extra PowerShell script command to remove these before applying the Template.
